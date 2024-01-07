@@ -5,10 +5,20 @@ import "../App.css";
 import { trpc } from "../utils/trpc";
 
 function Home() {
-  const [count, setCount] = useState(0);
+  const [count] = useState(0);
   const testQuery = trpc.read.useQuery("test");
   console.log(testQuery.data);
 
+  const create = trpc.create.useMutation({
+    onSuccess: (data) => {
+      console.log(data);
+    },
+  });
+
+  const handleClick = async () => {
+    const input = "Test";
+    create.mutate(input);
+  };
   return (
     <>
       <div>
@@ -21,9 +31,7 @@ function Home() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+        <button onClick={handleClick}>count is {count}</button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
