@@ -7,7 +7,8 @@ import { trpc } from "../utils/trpc";
 function Home() {
   const [count] = useState(0);
   const testQuery = trpc.read.useQuery("test");
-  console.log(testQuery.data);
+  const { data: posts } = trpc.posts.useQuery();
+  console.log(posts);
 
   const create = trpc.create.useMutation({
     onSuccess: (data) => {

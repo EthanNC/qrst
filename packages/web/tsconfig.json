@@ -21,7 +21,10 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "@qrst-stack/functions/*": ["../functions/src/*"]
+      "@qrst-stack/functions/*": ["../functions/src/*"],
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
   "include": ["src"],
