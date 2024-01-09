@@ -8,15 +8,21 @@ import {
   Link,
   MatchRoute,
   useNavigate,
-  RootRoute,
   Route,
   useRouterState,
+  rootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import type { AppRouter } from "@qrst-stack/functions/trpc";
-
+import {
+  QueryClient,
+  QueryClientProvider,
+  queryOptions,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { z } from "zod";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export const trpc = createTRPCProxyClient<AppRouter>({
   links: [
@@ -30,7 +36,9 @@ function Spinner() {
   return <div className="inline-block animate-spin px-3">⍥</div>;
 }
 
-const rootRoute = new RootRoute({
+const rootRoute = rootRouteWithContext<{
+  queryClient: QueryClient;
+}>()({
   component: RootComponent,
 });
 
@@ -87,6 +95,7 @@ function RootComponent() {
           </div>
         </div>
       </div>
+      <ReactQueryDevtools buttonPosition="top-right" />
       <TanStackRouterDevtools position="bottom-right" />
     </>
   );
@@ -149,15 +158,15 @@ const dashboardRoute = new Route({
         <div className="flex flex-wrap divide-x">
           {(
             [
-              [".", "Summary"],
+              ["/dashboard", "Summary", true],
               ["/dashboard/posts", "Posts"],
             ] as const
-          ).map(([to, label]) => {
+          ).map(([to, label, exact]) => {
             return (
               <Link
                 key={to}
                 to={to}
-                activeOptions={{ exact: to === "." }}
+                activeOptions={{ exact }}
                 activeProps={{ className: `font-bold` }}
                 className="p-2"
               >
@@ -173,10 +182,16 @@ const dashboardRoute = new Route({
   },
 });
 
+const postsQueryOptions = queryOptions({
+  queryKey: ["posts"],
+  queryFn: () => trpc.posts.query(),
+});
+
 const dashboardIndexRoute = new Route({
   getParentRoute: () => dashboardRoute,
   path: "/",
-  loader: () => trpc.posts.query(),
+  loader: ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData(postsQueryOptions),
   component: DashboardIndexComponent,
 });
 
@@ -196,12 +211,14 @@ function DashboardIndexComponent() {
 const postsRoute = new Route({
   getParentRoute: () => dashboardRoute,
   path: "posts",
-  loader: () => trpc.posts.query(),
+  loader: ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData(postsQueryOptions),
   component: PostsComponent,
 });
 
 function PostsComponent() {
-  const posts = postsRoute.useLoaderData();
+  const postsQuery = useSuspenseQuery(postsQueryOptions);
+  const posts = postsQuery.data;
 
   return (
     <div className="flex-1 flex">
@@ -254,6 +271,12 @@ const postsIndexRoute = new Route({
   },
 });
 
+const postQueryOptions = (postId: number) =>
+  queryOptions({
+    queryKey: ["posts", { postId }],
+    queryFn: () => trpc.post.query(postId),
+  });
+
 const postRoute = new Route({
   getParentRoute: () => postsRoute,
   path: "$postId",
@@ -265,12 +288,15 @@ const postRoute = new Route({
     showNotes: z.boolean().optional(),
     notes: z.string().optional(),
   }),
-  loader: async ({ params: { postId } }) => trpc.post.query(postId),
+  loader: ({ context: { queryClient }, params: { postId } }) =>
+    queryClient.ensureQueryData(postQueryOptions(postId)),
   component: PostComponent,
 });
 
 function PostComponent() {
-  const post = postRoute.useLoaderData();
+  const { postId } = postRoute.useParams();
+  const postQuery = useSuspenseQuery(postQueryOptions(postId));
+  const post = postQuery.data;
   const search = postRoute.useSearch();
   const navigate = useNavigate({ from: postRoute.id });
 
@@ -345,6 +371,8 @@ const routeTree = rootRoute.addChildren([
   ]),
 ]);
 
+const queryClient = new QueryClient();
+
 const router = new Router({
   routeTree,
   defaultPendingComponent: () => (
@@ -353,6 +381,10 @@ const router = new Router({
     </div>
   ),
   defaultPreload: "intent",
+  defaultPreloadStaleTime: 0,
+  context: {
+    queryClient,
+  },
 });
 
 declare module "@tanstack/react-router" {
@@ -364,5 +396,9 @@ declare module "@tanstack/react-router" {
 const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
-  root.render(<RouterProvider router={router} defaultPreload="intent" />);
+  root.render(
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} defaultPreload="intent" />
+    </QueryClientProvider>
+  );
 }
