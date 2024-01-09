@@ -29,5 +29,5 @@ declare module "@tanstack/react-router" {
   }
 }
 export default function RouterProvider() {
-  return <TanStackRouterProvider router={router} />;
+  return <TanStackRouterProvider router={router} defaultPreload="intent" />;
 }
