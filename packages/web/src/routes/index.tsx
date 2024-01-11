@@ -11,7 +11,7 @@ function IndexComponent() {
     <div className={`p-2`}>
       <div className="flex justify-between items-center mx-auto">
         <div className={`text-lg`}>Welcome Home!</div>
-        <AuthHeader email={email} logout={() => {}} />
+        <AuthHeader email={email} />
       </div>
       <hr className={`my-2`} />
       <Link

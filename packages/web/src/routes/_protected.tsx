@@ -1,3 +1,4 @@
+import { sessionQueryOptions } from "@/utils/queryOptions";
 import { FileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = new FileRoute("/_protected").createRoute({
@@ -14,4 +15,6 @@ export const Route = new FileRoute("/_protected").createRoute({
       });
     }
   },
+  loader: ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData(sessionQueryOptions),
 });

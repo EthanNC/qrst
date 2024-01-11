@@ -1,11 +1,31 @@
-import { initTRPC } from "@trpc/server";
+import { TRPCError, initTRPC } from "@trpc/server";
 import { awsLambdaRequestHandler } from "@trpc/server/adapters/aws-lambda";
 import { z } from "zod";
 
 import { create, read } from "@qrst-stack/core/task";
 import { ApiHandler } from "sst/node/api";
+import { sessions } from "./sessions";
+import { Context, createContext } from "./context";
 
-export const t = initTRPC.create();
+export const t = initTRPC.context<Context>().create();
+
+export const protectedProcedure = t.procedure.use(
+  async function isAuthed(opts) {
+    const { ctx } = opts;
+    // `ctx.user` is nullable
+    if (ctx.sessions.type === "public") {
+      //     ^?
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    return opts.next({
+      ctx: {
+        // ✅ user value is known to be non-null now
+        user: ctx.sessions.properties,
+        // ^?
+      },
+    });
+  }
+);
 
 const INVOICES = [
   { id: 1, title: "First post" },
@@ -35,13 +55,17 @@ const appRouter = t.router({
     await new Promise((resolve) => setTimeout(resolve, 500));
     return INVOICES.find((p) => p.id === req.input);
   }),
+  session: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.user.email;
+  }),
 });
 
 // export type definition of API
 export type AppRouter = typeof appRouter;
 
-const trpc = awsLambdaRequestHandler({
+export const trpc = awsLambdaRequestHandler({
   router: appRouter,
+  createContext,
 });
 
 export const handler = ApiHandler(async (req, ctx) => {

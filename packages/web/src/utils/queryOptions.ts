@@ -11,3 +11,8 @@ export const postQueryOptions = (postId: number) =>
     queryKey: ["posts", { postId }],
     queryFn: () => trpc.post.query(postId),
   });
+
+export const sessionQueryOptions = queryOptions({
+  queryKey: ["session"],
+  queryFn: () => trpc.session.query(),
+});
