@@ -1,3 +1,4 @@
+import AuthHeader from "@/components/AuthHeader";
 import { FileRoute, Link } from "@tanstack/react-router";
 
 export const Route = new FileRoute("/").createRoute({
@@ -5,9 +6,13 @@ export const Route = new FileRoute("/").createRoute({
 });
 
 function IndexComponent() {
+  const email = Route.useRouteContext().user?.email;
   return (
     <div className={`p-2`}>
-      <div className={`text-lg`}>Welcome Home!</div>
+      <div className="flex justify-between items-center mx-auto">
+        <div className={`text-lg`}>Welcome Home!</div>
+        <AuthHeader email={email} logout={() => {}} />
+      </div>
       <hr className={`my-2`} />
       <Link
         to={`/dashboard/posts/$postId`}

@@ -5,6 +5,7 @@ import {
 import { routeTree } from "@/routeTree.gen";
 import QueryProvider from "./query";
 import Spinner from "@/utils/spinner";
+import { store } from "@/utils/auth";
 
 const router = new Router({
   routeTree,
@@ -15,6 +16,7 @@ const router = new Router({
   ),
   // defaultErrorComponent: ({ error }) => <ErrorComponent error={error} />,
   context: {
+    user: store.get(),
     queryClient: QueryProvider.queryClient,
   },
   defaultPreload: "intent",

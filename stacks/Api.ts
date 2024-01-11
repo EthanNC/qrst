@@ -1,10 +1,16 @@
 import { StackContext, use, Api as ApiGateway, Config } from "sst/constructs";
 import { Database } from "./Database";
+import { Auth } from "./Auth";
 
 export function Api({ stack }: StackContext) {
-  const db = use(Database);
+  const auth = use(Auth);
 
   const api = new ApiGateway(stack, "api", {
+    defaults: {
+      function: {
+        bind: [auth],
+      },
+    },
     customDomain:
       stack.stage === "prod" ? "api.sevensingletables.com" : undefined,
     routes: {

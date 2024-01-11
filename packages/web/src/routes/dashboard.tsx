@@ -1,3 +1,4 @@
+import AuthHeader from "@/components/AuthHeader";
 import { FileRoute, Link, Outlet } from "@tanstack/react-router";
 
 export const Route = new FileRoute("/dashboard").createRoute({
@@ -5,9 +6,10 @@ export const Route = new FileRoute("/dashboard").createRoute({
 });
 
 function DashboardComponent() {
+  const email = Route.useRouteContext().user?.email;
   return (
     <>
-      <div className="flex items-center border-b">
+      <div className="flex items-center border-b gap-3">
         <h2 className="text-xl p-2">Dashboard</h2>
         <Link
           to="/dashboard/posts/$postId"
@@ -18,6 +20,7 @@ function DashboardComponent() {
         >
           1 New Invoice
         </Link>
+        <AuthHeader email={email} />
       </div>
       <div className="flex flex-wrap divide-x">
         {(

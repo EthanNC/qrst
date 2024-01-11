@@ -1,8 +1,10 @@
 import { StackContext, use, StaticSite } from "sst/constructs";
 import { Api } from "./Api";
+import { Auth } from "./Auth";
 
 export function Web({ stack }: StackContext) {
   const api = use(Api);
+  const auth = use(Auth);
 
   const site = new StaticSite(stack, "site", {
     path: "packages/web",
@@ -10,6 +12,7 @@ export function Web({ stack }: StackContext) {
     buildOutput: "dist",
     environment: {
       VITE_API_URL: api.customDomainUrl || api.url,
+      VITE_AUTH_URL: auth.url,
     },
   });
 

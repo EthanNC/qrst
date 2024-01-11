@@ -3,6 +3,7 @@ import { Database } from "./stacks/Database";
 import { Api } from "./stacks/Api";
 import { SSRFunction } from "./stacks/Function";
 import { Web } from "./stacks/Web";
+import { Auth } from "./stacks/Auth";
 
 export default {
   config(_input) {
@@ -12,6 +13,6 @@ export default {
     };
   },
   stacks(app) {
-    app.stack(Database).stack(Api).stack(SSRFunction).stack(Web);
+    app.stack(Database).stack(Auth).stack(Api).stack(SSRFunction).stack(Web);
   },
 } satisfies SSTConfig;

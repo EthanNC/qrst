@@ -8,9 +8,11 @@ import {
 } from "@tanstack/react-router";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { User } from "@/utils/auth";
 
 export const Route = rootRouteWithContext<{
   queryClient: QueryClient;
+  user: User | null;
 }>()({
   component: RootComponent,
 });
@@ -38,6 +40,7 @@ function RootComponent() {
               [
                 ["/", "Home"],
                 ["/dashboard", "Dashboard"],
+                ["/profile", "Profile"],
               ] as const
             ).map(([to, label]) => {
               return (
