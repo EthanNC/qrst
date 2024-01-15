@@ -14,8 +14,8 @@ importers:
         specifier: 10.3.0
         version: 10.3.0
       sst:
-        specifier: 2.39.4
-        version: 2.39.4
+        specifier: 2.39.5
+        version: 2.39.5
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -30,8 +30,8 @@ importers:
         specifier: ^20.10.6
         version: 20.10.6
       sst:
-        specifier: 2.39.4
-        version: 2.39.4
+        specifier: 2.39.5
+        version: 2.39.5
       vitest:
         specifier: ^1.1.3
         version: 1.1.3(@types/node@20.10.6)
@@ -52,8 +52,8 @@ importers:
         specifier: ^20.10.6
         version: 20.10.6
       sst:
-        specifier: 2.39.4
-        version: 2.39.4
+        specifier: 2.39.5
+        version: 2.39.5
       vitest:
         specifier: ^1.1.3
         version: 1.1.3(@types/node@20.10.6)
@@ -4067,15 +4067,6 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /@smithy/util-endpoints@1.0.5:
-    resolution: {integrity: sha512-K7qNuCOD5K/90MjHvHm9kJldrfm40UxWYQxNEShMFxV/lCCCRIg8R4uu1PFAxRvPxNpIdcrh1uK6I1ISjDXZJw==}
-    engines: {node: '>= 14.0.0'}
-    dependencies:
-      '@smithy/node-config-provider': 2.1.9
-      '@smithy/types': 2.8.0
-      tslib: 2.6.2
-    dev: true
-
   /@smithy/util-endpoints@1.0.8:
     resolution: {integrity: sha512-l8zVuyZZ61IzZBYp5NWvsAhbaAjYkt0xg9R4xUASkg5SEeTT2meHOJwJHctKMFUXe4QZbn9fR2MaBYjP2119+w==}
     engines: {node: '>= 14.0.0'}
@@ -7981,8 +7972,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /sst@2.39.4:
-    resolution: {integrity: sha512-nEIxEeH4HM+S6KyNNfJcqqvkRx01HwVLNa/nqiyir7d5ETtRYDT0ec2Ebd3JDLOiXNYyYTCb/aXzrB72BpiKUw==}
+  /sst@2.39.5:
+    resolution: {integrity: sha512-ISXRzPPaGG1QnONkatb2TYEJgda/afpsIFyxyxOdvJ2BiACQe9KrDD+MvLVAZRAnfD8yztF3grFh/r6SW/2JIw==}
     hasBin: true
     peerDependencies:
       '@sls-next/lambda-at-edge': ^3.7.0
@@ -8018,7 +8009,6 @@ packages:
       '@babel/generator': 7.23.6
       '@babel/plugin-syntax-typescript': 7.23.3(@babel/core@7.23.7)
       '@smithy/signature-v4': 2.0.19
-      '@smithy/util-endpoints': 1.0.5
       '@trpc/server': 9.16.0
       adm-zip: 0.5.10
       aws-cdk-lib: 2.110.1(constructs@10.3.0)

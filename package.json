@@ -13,7 +13,7 @@
     "deps": "sst update && pnpm install && pnpm up -i -L '!aws-cdk-lib' '!constructs'"
   },
   "devDependencies": {
-    "sst": "2.39.4",
+    "sst": "2.39.5",
     "aws-cdk-lib": "2.110.1",
     "constructs": "10.3.0",
     "typescript": "^5.3.3",
