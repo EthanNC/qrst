@@ -2,11 +2,12 @@
   "extends": ["config:recommended"],
   "packageRules": [
     {
-      "matchPackageNames": ["sst"],
+      "matchManagers": ["pnpm"],
       "postUpgradeTasks": {
-        "commands": ["npm run deps"],
+        "commands": ["pnpm run deps"],
         "fileFilters": ["**/*"]
       }
     }
-  ]
+  ],
+  "dependencyDashboardApproval": true
 }
