@@ -1,0 +1,12 @@
+{
+  "extends": ["config:recommended"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["sst"],
+      "postUpgradeTasks": {
+        "commands": ["npm run deps"],
+        "fileFilters": ["**/*"]
+      }
+    }
+  ]
+}
